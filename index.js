@@ -1,5 +1,3 @@
-
-
 function fun(n) {
     let array = []
     let seive = []
