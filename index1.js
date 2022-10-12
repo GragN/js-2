@@ -82,7 +82,6 @@ function deleteId(n) {
 }
 
 
-
 function clear() {
     basket[0].good.length = 0
     basket[0].amount = basket[0].good.length
