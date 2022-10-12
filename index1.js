@@ -44,28 +44,43 @@ const goods = [
 const basket = [
     {
         good: [],
-        amount: undefined,
+        amount: [],
     }
 ]
 
 
 function add(n) {
-    if (n <= goods.length) {
-        basket[0].good.push(goods[n - 1].id) 
+    let number = goods.find(item => item.id == n)
+    if (basket[0].good.includes(number.id)) {
+        for (i of basket[0].amount) {
+            if (i[0] == number.id) {
+                i[1] += 1
+            }
+        }
+    } else {
+        basket[0].good.push(number.id)
+        basket[0].amount.push([number.id, 1])
     }
 
-    basket[0].amount = basket[0].good.length
 } 
 
 
 function deleteId(n) {
-    if (basket[0].good.includes(n)) {
-        index = basket[0].good.indexOf(n)
-        delete basket[0].good.splice(index, 1)
+    let number = goods.find(item => item.id == n)
+    if (basket[0].good.includes(number.id)) {
+        for (i of basket[0].amount) {
+            if (i[0] == number.id && i[1] == 1) {
+                let index = basket[0].good.indexOf(number.id)
+                basket[0].good.splice(index, 1)
+                let index1 = basket[0].amount.indexOf(i)
+                basket[0].amount.splice(index1, 1)
+            } else if (i[0] == number.id && i[1] > 1) {
+                i[1] -= 1
+            }
+        }
     }
-
-    basket[0].amount = basket[0].good.length
 }
+
 
 
 function clear() {
@@ -76,16 +91,19 @@ function clear() {
 
 function total() {
     let totalPrice = 0
-    for (let number = 0; number < basket[0].good.length; number++) {
-        let result = goods.find(item => item.id == basket[0].good[number])
-        totalPrice += result.price
+    let totalAmount = 0
+    for (let number = 0; number < basket[0].amount.length; number++) {
+        let result = goods.find(item => item.id == basket[0].amount[number][0])
+        totalPrice += (basket[0].amount[number][1]) * result.price
+        totalAmount += (basket[0].amount[number][0])
     }
-    return {totalAmount: `${basket[0].good.length}`, totalSum: `${totalPrice}`}
+    return (`totalAmount: ${totalAmount} \ntotalPrice: ${totalPrice}`)
 }
 
-add(2); add(2); add(5); add(3);
-deleteId(2); deleteId(3)
+add(1); add(1); add(1); add(2); add(2); add(3); add(3); add(1); add(2)
+deleteId(1); deleteId(1); deleteId(1); deleteId(1);
 // clear()
 
-console.log(basket)
+console.log(basket[0])
+
 console.log(total())
